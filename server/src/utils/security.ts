@@ -34,11 +34,12 @@ export function verifyToken(token: string): TokenPayload | null {
 }
 
 export function getSessionCookieOptions(): CookieOptions {
+  const isCrossSite = env.COOKIE_SECURE // true in production (Render+Vercel), false in local dev
   return {
     httpOnly: true,
     secure: env.COOKIE_SECURE,
-    sameSite: 'lax',
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    sameSite: isCrossSite ? 'none' : 'lax',
+    maxAge: 7 * 24 * 60 * 60 * 1000,
     domain: env.COOKIE_DOMAIN,
     path: '/',
   }

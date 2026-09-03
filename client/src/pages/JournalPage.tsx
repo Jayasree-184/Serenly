@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-
+import { api } from '../lib/apiClient'
 interface JournalEntryItem {
   id: string
   title: string
@@ -14,50 +14,33 @@ export const JournalPage: React.FC = () => {
   const { t } = useTranslation()
 
   // Journal Entry State
-  const [title, setTitle] = useState('Letting today just be what it is')
-  const [body, setBody] = useState(
-    'Woke up with that heavy fog in my chest again. Decided not to fight it or get frustrated with myself. Made chamomile tea, stood by the window for 5 minutes, and watered the fern. Small things still matter even when the day feels muted. I am allowing myself to exist without producing anything extraordinary today.'
-  )
+  const [title, setTitle] = useState('')
+  const [body, setBody] = useState('')
   const [tags, setTags] = useState(['#MorningReflections', '#Acceptance', '#SelfCompassion'])
   const [saveStatus, setSaveStatus] = useState('Autosaved just now')
   const [filterMood, setFilterMood] = useState('All')
   const [searchQuery, setSearchQuery] = useState('')
 
   // Entries archive
-  const [entries, setEntries] = useState<JournalEntryItem[]>([
-    {
-      id: '1',
-      title: 'Letting today just be what it is',
-      body: 'Woke up with that heavy fog in my chest again. Decided not to fight it...',
-      date: 'Today',
-      tag: '#Acceptance',
-      wordCount: 142,
-    },
-    {
-      id: '2',
-      title: 'Walking until the noise settled',
-      body: 'Took the trail by the river. Noticed the changing leaves and remembered that shedding can be natural...',
-      date: 'Oct 23',
-      tag: '#Calm',
-      wordCount: 210,
-    },
-    {
-      id: '3',
-      title: 'A boundary I actually held',
-      body: 'Said no to the extra weekend project. Felt that guilty wave for twenty minutes, then pure relief...',
-      date: 'Oct 21',
-      tag: '#Growth',
-      wordCount: 180,
-    },
-    {
-      id: '4',
-      title: 'Night-time unburdening',
-      body: 'Everything feels magnified at 11pm. Listing 3 things that are already resolved helps ground me...',
-      date: 'Oct 18',
-      tag: '#SleepSanctuary',
-      wordCount: 95,
-    },
-  ])
+  const [entries, setEntries] = useState<JournalEntryItem[]>([])
+
+  // Load real entries from the server
+  useEffect(() => {
+    api.get('/journals').then((data) => {
+      // Note: the backend list endpoint only returns summary fields
+      // (no full `content`), to protect bandwidth & privacy. We fall
+      // back to `prompt` for the preview text shown in the archive list.
+      const mapped = (data.journals || []).map((e: any) => ({
+        id: e.id,
+        title: e.title || 'Gentle Reflection',
+        body: e.prompt ?? '',
+        date: new Date(e.createdAt).toLocaleDateString(),
+        tag: (e.tags && e.tags[0]) || '#Reflection',
+        wordCount: e.wordCount,
+      }))
+      setEntries(mapped)
+    }).catch((err) => console.error('Failed to load journals', err))
+  }, [])
 
   // Word count calculation
   const wordCount = body.trim() ? body.trim().split(/\s+/).length : 0
@@ -74,19 +57,28 @@ export const JournalPage: React.FC = () => {
     setSaveStatus('Prompt added')
   }
 
-  const handleSaveEntry = () => {
-    const newEntry: JournalEntryItem = {
-      id: Date.now().toString(),
-      title: title.trim() || 'Gentle Reflection',
-      body: body.trim(),
-      date: 'Just now',
-      tag: tags[0] || '#Reflection',
-      wordCount,
+  const handleSaveEntry = async () => {
+    try {
+      const data = await api.post('/journals', {
+        title: title.trim() || undefined,
+        content: body.trim(),
+        tags,
+      })
+      const newEntry: JournalEntryItem = {
+        id: data.entry.id,
+        title: data.entry.title || 'Gentle Reflection',
+        body: data.entry.content,
+        date: 'Just now',
+        tag: (data.entry.tags && data.entry.tags[0]) || '#Reflection',
+        wordCount: data.entry.wordCount,
+      }
+      setEntries((prev) => [newEntry, ...prev])
+      setSaveStatus('Saved securely just now')
+      setTimeout(() => setSaveStatus('Autosaved just now'), 3000)
+    } catch (err) {
+      console.error('Failed to save journal entry', err)
+      setSaveStatus('Failed to save')
     }
-
-    setEntries((prev) => [newEntry, ...prev])
-    setSaveStatus('Saved securely just now')
-    setTimeout(() => setSaveStatus('Autosaved just now'), 3000)
   }
 
   const handleClearEntry = () => {

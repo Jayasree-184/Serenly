@@ -1,6 +1,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Logo } from './Logo'
+import { useAuth } from '../../context/AuthContext'
 
 interface HeaderProps {
   onOpenEmergency: () => void
@@ -8,6 +9,15 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onOpenEmergency }) => {
   const { t, i18n } = useTranslation()
+  const { user } = useAuth()
+
+  const displayName = user?.displayName || 'Friend'
+  const initials = displayName
+    .split(' ')
+    .filter(Boolean)
+    .map((part) => part[0]?.toUpperCase())
+    .slice(0, 2)
+    .join('') || 'S'
 
   // Format today's date
   const today = new Date().toLocaleDateString(i18n.language === 'ta' ? 'ta-IN' : 'en-US', {
@@ -45,14 +55,14 @@ export const Header: React.FC<HeaderProps> = ({ onOpenEmergency }) => {
         {/* User status */}
         <div className="flex items-center gap-2.5 pl-2">
           <div className="hidden sm:flex flex-col text-right">
-            <span className="font-semibold text-xs text-text-primary">Maya Lin</span>
+            <span className="font-semibold text-xs text-text-primary">{displayName}</span>
             <span className="text-[11px] text-primary-teal flex items-center justify-end gap-1">
               <span className="w-1.5 h-1.5 rounded-full bg-success"></span>
               Taking it easy
             </span>
           </div>
           <div className="w-8 h-8 rounded-full bg-container-sage text-primary-forest flex items-center justify-center font-bold text-xs ring-1 ring-primary-forest/10 shadow-xs">
-            ML
+            {initials}
           </div>
         </div>
       </div>

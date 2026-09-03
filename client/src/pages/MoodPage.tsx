@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { api } from '../lib/apiClient'
 
 export const MoodPage: React.FC = () => {
   const { t } = useTranslation()
@@ -99,29 +100,31 @@ export const MoodPage: React.FC = () => {
     return 'Bright & capable'
   }
 
-  const handleSaveCheckIn = () => {
-    const entry = {
-      mood: selectedMood,
-      emotions: selectedEmotions,
-      energy: energyLevel,
-      sleep: sleepPhase,
-      context: selectedContext,
-      note: privateNote,
-      timestamp: Date.now(),
-    }
+const moodLevelMap: Record<number, string> = {
+  1: 'VERY_LOW',
+  2: 'LOW',
+  3: 'OKAY',
+  4: 'GOOD',
+  5: 'GREAT',
+}
 
-    try {
-      const existing = JSON.parse(localStorage.getItem('moodHistory') || '[]')
-      existing.push(entry)
-      localStorage.setItem('moodHistory', JSON.stringify(existing))
-    } catch {
-      // ignore local write errors
-    }
-
+const handleSaveCheckIn = async () => {
+  try {
+    await api.post('/moods', {
+      moodLevel: moodLevelMap[selectedMood],
+      moodScore: selectedMood * 20, // maps 1-5 scale to 1-100
+      emotionTags: selectedEmotions,
+      energyLevel,
+      sleepQuality: sleepPhase,
+      contextTags: selectedContext,
+      note: privateNote || undefined,
+    })
     setIsSaved(true)
     setTimeout(() => setIsSaved(false), 4000)
+  } catch (err) {
+    console.error('Failed to save mood entry', err)
   }
-
+}
   return (
     <div className="flex flex-col gap-8 animate-fade-in">
       {/* Header Banner */}
