@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary-forest: #163C3A;
+  --color-primary-teal: #205B55;
+  --color-sage: #A8C8B8;
+  --color-container-sage: #CFE3D8;
+  --color-secondary-container: #C9EAD9;
+  --color-canvas-cream: #F7F5EF;
+  --color-surface-oat: #F0EDE4;
+  --color-surface-card: #FFFFFF;
+  --color-surface-container-low: #F5F3ED;
+  --color-surface-container-high: #EAE8E2;
+  --color-surface-dim: #DCDAD4;
+  --color-accent-lavender: #DCD8F2;
+  --color-on-accent-lavender: #241E45;
+  --color-accent-sky: #D9EAF0;
+  --color-on-accent-sky: #143845;
+  --color-accent-peach: #E8B7A5;
+  --color-on-accent-peach: #4B2519;
+  --color-emergency: #B94A48;
+  --color-emergency-surface: rgba(185, 74, 72, 0.12);
+  --color-emergency-border: rgba(185, 74, 72, 0.35);
+  --color-success: #4F806B;
+  --color-success-surface: rgba(79, 128, 107, 0.15);
+  --color-text-primary: #19302E;
+  --color-text-secondary: #667773;
+  --color-text-muted: #8A9A95;
+
+  --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-body: 'Manrope', 'Noto Sans Tamil', system-ui, sans-serif;
+}
+
+:root {
+  --app-font-scale: 100%;
+}
+
+html {
+  font-size: var(--app-font-scale);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--color-canvas-cream, #F7F5EF);
+  color: var(--color-text-primary, #19302E);
+  font-family: var(--font-body);
+}
+
+/* Material symbols outlined styling */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* High contrast mode support */
+body.high-contrast {
+  --color-canvas-cream: #FFFFFF;
+  --color-surface-card: #FFFFFF;
+  --color-surface-oat: #F0F0F0;
+  --color-text-primary: #000000;
+  --color-text-secondary: #222222;
+  --color-primary-forest: #000000;
+  --color-primary-teal: #0A3D38;
+}
+
+/* Hide scrollbar for subtle overflow containers */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

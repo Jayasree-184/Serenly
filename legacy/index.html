@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Serenly — Healing starts here</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="app">
+
+    <!-- MAIN CONTENT (LEFT) -->
+    <main class="main">
+
+      <!-- TOP BAR (STICKY) -->
+      <header class="topbar glass">
+        <div class="topbar-left">
+          <div class="logo" aria-hidden="true">🧠</div>
+          <div class="brand">
+            <h1 class="brand-name" data-i18n="appName">Serenly</h1>
+            <p class="brand-tag" data-i18n="appTag">Healing starts here</p>
+          </div>
+        </div>
+
+        <button class="menu-btn" id="menuBtn" data-i18n-aria="openMenu" aria-label="Open menu">☰</button>
+      </header>
+
+      <!-- PAGE CONTENT -->
+      <section class="welcome glass">
+        <div class="hello">
+          <h2 data-i18n="welcomeTitle">You’re not alone. You’re human.</h2>
+          <p data-i18n="welcomeSub">Small steps count. This app supports you on hard days.</p>
+        </div>
+
+        <div class="stats">
+          <div class="stat glass">
+            <p data-i18n="todayMood">Today Mood</p>
+            <h3 id="todayMood">—</h3>
+          </div>
+          <div class="stat glass">
+            <p data-i18n="journals">Journals</p>
+            <h3 id="journalCount">0</h3>
+          </div>
+          <div class="stat glass">
+            <p data-i18n="goalProgress">Goal Progress</p>
+            <h3 id="goalPercent">0%</h3>
+          </div>
+        </div>
+      </section>
+
+      <!-- NAV PAGES -->
+      <section class="page active" id="dashboard">
+        <div class="grid2">
+          <section class="card glass">
+            <h3 data-i18n="dailyProgress">Daily Progress</h3>
+            <p class="muted" data-i18n="gentleActionForToday">Gentle action for today</p>
+
+            <!-- This will be replaced by JS suggestions (EN/TA) -->
+            <p id="gentleAction" class="big">Drink a glass of water.</p>
+
+            <div class="row">
+              <button class="btn" id="quickBreath" data-i18n="btnBreathing">Breathing</button>
+              <button class="btn" id="quickMusic" data-i18n="btnMusic">Music</button>
+              <button class="btn" id="quickJournal" data-i18n="btnJournal">Journal</button>
+            </div>
+          </section>
+
+          <section class="card glass">
+            <h3 data-i18n="moodTrend">Mood Trend</h3>
+            <p class="muted" data-i18n="moodTrendSub">Based on your last check-ins.</p>
+            <div class="chart" id="moodChart"></div>
+          </section>
+
+          <section class="card glass">
+            <h3 data-i18n="dailyAffirmation">Daily Affirmation</h3>
+            <!-- JS will set this in EN/TA -->
+            <p id="affirmation" class="big">You are not alone.</p>
+          </section>
+
+          <section class="card glass">
+            <h3 data-i18n="safetyPlan">Safety Plan (Quick)</h3>
+            <ul class="list small">
+              <li data-i18n="s1">✅ Drink water</li>
+              <li data-i18n="s2">✅ Eat something small</li>
+              <li data-i18n="s3">✅ Text someone you trust</li>
+              <li data-i18n="s4">✅ If you feel unsafe, use Emergency Help</li>
+            </ul>
+          </section>
+        </div>
+      </section>
+
+      <section class="page" id="mood">
+        <section class="card glass">
+          <h3 data-i18n="moodCheckIn">Mood Check-in</h3>
+          <p class="muted" data-i18n="moodQ">How heavy does today feel?</p>
+
+          <div class="row wrap">
+            <button class="pill moodBtn" data-mood="😣 Very heavy" data-score="20" data-i18n="moodVeryHeavy">😣 Very heavy</button>
+            <button class="pill moodBtn" data-mood="😐 Manageable" data-score="45" data-i18n="moodManageable">😐 Manageable</button>
+            <button class="pill moodBtn" data-mood="🙂 A little lighter" data-score="65" data-i18n="moodALittleLighter">🙂 A little lighter</button>
+            <button class="pill moodBtn" data-mood="😊 Good" data-score="85" data-i18n="moodGood">😊 Good</button>
+          </div>
+
+          <div class="field">
+            <label data-i18n="moodNoteLabel">Mood note (optional)</label>
+            <textarea
+              id="moodNote"
+              rows="4"
+              data-i18n-placeholder="moodNotePH"
+              placeholder="Write a small note…"
+            ></textarea>
+          </div>
+
+          <button class="btn primary" id="saveMoodBtn" data-i18n="saveMood">Save Mood</button>
+        </section>
+      </section>
+
+      <section class="page" id="coping">
+        <div class="grid2">
+          <section class="card glass">
+            <h3 data-i18n="copingStrategies">Coping Strategies</h3>
+            <div class="tabs">
+              <button class="tab active" data-tab="breath" data-i18n="tabBreathing">Breathing</button>
+              <button class="tab" data-tab="ground" data-i18n="tabGrounding">Grounding</button>
+              <button class="tab" data-tab="music" data-i18n="tabMusic">Music</button>
+            </div>
+
+            <!-- Breathing -->
+            <div class="tab-panel active" id="tab-breath">
+              <h4 data-i18n="boxBreathing">Box Breathing (4–4–4–4)</h4>
+              <p class="muted" data-i18n="boxBreathingSub">Inhale 4 • Hold 4 • Exhale 4 • Hold 4</p>
+              <div class="breathWrap">
+                <div class="breathCircle" id="breathCircle">Inhale</div>
+              </div>
+              <div class="row">
+                <button class="btn primary" id="startBreath" data-i18n="btnStart">Start</button>
+                <button class="btn" id="stopBreath" data-i18n="btnStop">Stop</button>
+              </div>
+            </div>
+
+            <!-- Grounding -->
+            <div class="tab-panel" id="tab-ground">
+              <h4 data-i18n="groundingTitle">5–4–3–2–1 Grounding</h4>
+              <ul class="list small">
+                <li data-i18n="g1">5 things you can see</li>
+                <li data-i18n="g2">4 things you can feel</li>
+                <li data-i18n="g3">3 things you can hear</li>
+                <li data-i18n="g4">2 things you can smell</li>
+                <li data-i18n="g5">1 thing you can taste</li>
+              </ul>
+              <button class="btn primary" id="groundDone" data-i18n="btnDone">Done</button>
+            </div>
+
+            <!-- Music -->
+            <div class="tab-panel" id="tab-music">
+              <h4 data-i18n="musicTitle">Calm Music Player</h4>
+
+              <audio id="audio" controls preload="metadata">
+                <source src="assets/music/calm1.mp3" type="audio/mpeg">
+              </audio>
+
+              <div class="playlist">
+                <button class="track btn" data-src="assets/music/calm1.mp3" data-i18n="trackCalm">🌙 Calm Night</button>
+                <button class="track btn" data-src="assets/music/rain.mp3" data-i18n="trackRain">🌧 Rain</button>
+                <button class="track btn" data-src="assets/music/piano.mp3" data-i18n="trackPiano">🎹 Soft Piano</button>
+              </div>
+
+              <div class="row">
+                <button class="btn" id="volDown" aria-label="Volume down">🔉</button>
+                <button class="btn" id="volUp" aria-label="Volume up">🔊</button>
+                <button class="btn" id="loopToggle" data-i18n="loop">🔁 Loop</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="card glass">
+            <h3 data-i18n="selfHelpPrompts">Self-help Prompts</h3>
+            <p class="muted" data-i18n="tryOneLine">Try writing one line:</p>
+            <p id="promptText" class="big"></p>
+            <div class="row">
+              <button class="btn" id="newPrompt" data-i18n="btnNewPrompt">New Prompt</button>
+              <button class="btn primary" id="usePrompt" data-i18n="btnUseInJournal">Use in Journal</button>
+            </div>
+
+            <hr class="sep">
+
+            <h3 data-i18n="educationalResources">Educational Resources</h3>
+            <ul class="list">
+              <li data-i18n="r1">Depression symptoms & why it happens</li>
+              <li data-i18n="r2">When to seek professional help</li>
+              <li data-i18n="r3">Sleep, movement, and nutrition basics</li>
+            </ul>
+          </section>
+        </div>
+      </section>
+
+      <section class="page" id="goals">
+        <section class="card glass">
+          <h3 data-i18n="goalSetting">Goal Setting</h3>
+          <p class="muted" data-i18n="goalSub">Small goals are powerful on low-energy days.</p>
+
+          <div class="row">
+            <input
+              id="goalInput"
+              class="input"
+              data-i18n-placeholder="goalPH"
+              placeholder="Add a small goal…"
+            />
+            <button class="btn primary" id="addGoal" data-i18n="btnAdd">Add</button>
+          </div>
+
+          <ul id="goalList" class="list"></ul>
+        </section>
+      </section>
+
+      <section class="page" id="journal">
+        <section class="card glass">
+          <h3 data-i18n="privateJournal">Private Journal</h3>
+          <p class="muted" data-i18n="journalSub">This is only for you. No judgement.</p>
+
+          <textarea
+            id="journalText"
+            rows="7"
+            data-i18n-placeholder="journalPH"
+            placeholder="Write here…"
+          ></textarea>
+
+          <div class="row">
+            <button class="btn primary" id="saveJournal" data-i18n="btnSave">Save</button>
+            <button class="btn" id="clearJournal" data-i18n="btnClear">Clear</button>
+          </div>
+
+          <h4 class="mt" data-i18n="savedEntries">Saved Entries</h4>
+          <ul id="journalEntries" class="list"></ul>
+        </section>
+      </section>
+
+      <section class="page" id="meds">
+        <section class="card glass">
+          <h3 data-i18n="medTitle">Medication Reminders</h3>
+
+          <div class="row wrap">
+            <input
+              id="medName"
+              class="input"
+              data-i18n-placeholder="medNamePH"
+              placeholder="Medicine name"
+            />
+            <input id="medTime" class="input" type="time" />
+            <button class="btn primary" id="addMed" data-i18n="btnAdd">Add</button>
+          </div>
+
+          <ul id="medList" class="list"></ul>
+
+          <hr class="sep">
+          <h4 data-i18n="tips">Tips</h4>
+          <ul class="list small">
+            <li data-i18n="t1">Use reminders for consistency</li>
+            <li data-i18n="t2">If side effects occur, contact a professional</li>
+            <li data-i18n="t3">Never self-adjust dosage without advice</li>
+          </ul>
+        </section>
+      </section>
+
+      <section class="page" id="community">
+        <section class="card glass">
+          <h3 data-i18n="communityTitle">Peer Support Community (Demo)</h3>
+          <p class="muted" data-i18n="communitySub">Share gently. Be kind. This is a safe space.</p>
+
+          <textarea
+            id="postText"
+            rows="3"
+            data-i18n-placeholder="postPH"
+            placeholder="Write a supportive message…"
+          ></textarea>
+
+          <button class="btn primary mt" id="addPost" data-i18n="btnPost">Post</button>
+
+          <h4 class="mt" data-i18n="postsTitle">Posts</h4>
+          <ul id="postList" class="list"></ul>
+        </section>
+      </section>
+
+      <section class="page" id="support">
+        <div class="supportCards">
+          <section class="card glass">
+            <h3 data-i18n="profSupport">Professional Support</h3>
+            <p class="muted" data-i18n="profSub">Demo: In production, therapists would be verified.</p>
+            <button class="btn primary" id="bookBtn" data-i18n="btnBook">Book a Session</button>
+          </section>
+
+          <section class="card glass">
+            <h3 data-i18n="privacyTitle">Privacy & Data Security</h3>
+            <ul class="list small">
+              <li data-i18n="p1">Demo stores data locally in browser</li>
+              <li data-i18n="p2">Production: encryption + consent + access control</li>
+              <li data-i18n="p3">No public sharing of journal by default</li>
+            </ul>
+          </section>
+
+          <section class="card glass">
+            <h3 data-i18n="accessibility">Accessibility</h3>
+            <ul class="list small">
+              <li data-i18n="a1">Font size controls (A-/A+)</li>
+              <li data-i18n="a2">High contrast mode</li>
+              <li data-i18n="a3">Simple, calm layout</li>
+            </ul>
+          </section>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- RIGHT SIDEBAR (STICKY, ALWAYS VISIBLE ON DESKTOP) -->
+    <aside class="sidebar glass" id="sidebar">
+
+      <nav class="nav">
+        <button class="nav-link active" data-target="dashboard">🏠 <span data-i18n="navDashboard">Dashboard</span></button>
+        <button class="nav-link" data-target="mood">😊 <span data-i18n="navMood">Mood</span></button>
+        <button class="nav-link" data-target="coping">🧘 <span data-i18n="navCoping">Coping</span></button>
+        <button class="nav-link" data-target="goals">🎯 <span data-i18n="navGoals">Goals</span></button>
+        <button class="nav-link" data-target="journal">📓 <span data-i18n="navJournal">Journal</span></button>
+        <button class="nav-link" data-target="meds">💊 <span data-i18n="navMeds">Meds</span></button>
+        <button class="nav-link" data-target="community">👥 <span data-i18n="navCommunity">Community</span></button>
+        <button class="nav-link" data-target="support">🧑‍⚕️ <span data-i18n="navSupport">Support</span></button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="row wrap">
+          <button class="pill" id="fontMinus">A-</button>
+          <button class="pill" id="fontPlus">A+</button>
+          <button class="pill" id="contrastToggle">◑</button>
+          <button class="pill" id="langToggle">EN / TA</button>
+        </div>
+
+        <button class="emergency" id="emergencyBtn"><span data-i18n="emergency">Emergency Help</span></button>
+        <p class="small muted" data-i18n="demoNote">Demo: data stored locally in your browser (localStorage).</p>
+      </div>
+    </aside>
+
+    <!-- OVERLAY for mobile -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- EMERGENCY MODAL -->
+    <div class="modal" id="modal">
+      <div class="modal-card glass">
+        <div class="row between">
+          <h3 data-i18n="emergencyTitle">Emergency Help</h3>
+          <button class="btn" id="closeModal" aria-label="Close">✕</button>
+        </div>
+        <p data-i18n="emergencyMsg">
+          If you feel unsafe right now, please contact local emergency services or a trusted person immediately.
+        </p>
+        <ul class="list small">
+          <li data-i18n="e1">Call your local emergency number</li>
+          <li data-i18n="e2">Reach a friend/family member</li>
+          <li data-i18n="e3">Go to the nearest hospital</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
